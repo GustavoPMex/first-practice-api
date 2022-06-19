@@ -5,8 +5,8 @@ from typing import Optional
 from pydantic import BaseModel
 
 # FastAPI
-from fastapi import FastAPI
-from fastapi import Body
+from fastapi import FastAPI, Query
+from fastapi import Body, Query
 
 
 app = FastAPI()
@@ -32,3 +32,17 @@ def home():
 # Cuando tiene "..." significa que es obligatorio, en éste caso en el Body
 def create_person(person: Person = Body(...)):
     return person
+
+
+# Validaciones: Query parameters
+
+@app.get("/person/detail")
+def show_person(
+    # Los Query parameters deberian ser siempre opcionales
+    # En este caso, por ejemplo, se espera un tipo str y el valor por default 
+    # en caso de no ingresar nada será None 
+    name: Optional[str] = Query(None, max_length=50),
+    # En este caso, cómo ejemplo, hacemos que age sea obligatorio con los puntos
+    age: Optional[int] = Query(...)
+):
+    return {name: age} 
