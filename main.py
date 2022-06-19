@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 # FastAPI
 from fastapi import FastAPI, Query
-from fastapi import Body, Query
+from fastapi import Body, Query, Path
 
 
 app = FastAPI()
@@ -41,8 +41,31 @@ def show_person(
     # Los Query parameters deberian ser siempre opcionales
     # En este caso, por ejemplo, se espera un tipo str y el valor por default 
     # en caso de no ingresar nada será None 
-    name: Optional[str] = Query(None, max_length=50),
+    name: Optional[str] = Query(
+        None,
+        max_length=50,
+        title="Person Name",
+        description="This is the person name. It's between 1 and 50 characters"
+    ),
     # En este caso, cómo ejemplo, hacemos que age sea obligatorio con los puntos
-    age: Optional[int] = Query(...)
+    age: Optional[int] = Query(
+        ...,
+        title="Person Age",
+        description="This is the person age. It's required"
+    )
 ):
     return {name: age} 
+
+# Validaciones: Path parameters
+
+@app.get("/person/detail/{person_id}")
+def show_person(
+    person_id: int = Path(
+        ..., 
+        # Mayor a 0 (gt = Greater than)
+        gt=0,
+        title="Person Id",
+        description="This is the person Id"
+    )
+):
+    return {person_id: "It exists"}
