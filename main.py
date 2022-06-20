@@ -1,8 +1,10 @@
 # Python
 from typing import Optional
+from enum import Enum
 
 # Pydantic
 from pydantic import BaseModel
+from pydantic import Field
 
 # FastAPI
 from fastapi import FastAPI, Query
@@ -13,6 +15,14 @@ app = FastAPI()
 
 # Models
 
+class HairColor(Enum):
+    white = "white"
+    brown = "brown"
+    black = "black"
+    blonde = "blonde"
+    red = "red"
+
+
 class Location(BaseModel):
     city: str
     state: str
@@ -20,12 +30,24 @@ class Location(BaseModel):
 
 class Person(BaseModel):
     # Nombre | Tipo
-    first_name: str
-    last_name: str
-    age: int
+    first_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    last_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    age: int = Field(
+        ...,
+        gt=0,
+        le=115
+    )
     # Estos campos son opcionales, pueden ser enviados o no en el Request Body
-    hair_color: Optional[str] = None
-    is_married: Optional[bool] = False
+    hair_color: Optional[HairColor] = Field(default=None)
+    is_married: Optional[bool] = Field(default=None)
 
 
 @app.get("/")
@@ -91,5 +113,5 @@ def update_person(
 ):
     results = person.dict()
     results.update(location.dict())
-    
+
     return results
