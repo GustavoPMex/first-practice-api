@@ -4,7 +4,7 @@ from enum import Enum
 
 # Pydantic
 from pydantic import BaseModel
-from pydantic import Field
+from pydantic import Field, EmailStr
 
 # FastAPI
 from fastapi import FastAPI, Query
@@ -15,6 +15,7 @@ app = FastAPI()
 
 # Models
 
+# Creamos éste modelo para saber que tipo de colores podemos seleccionar
 class HairColor(Enum):
     white = "white"
     brown = "brown"
@@ -47,8 +48,10 @@ class Person(BaseModel):
         le=115
     )
     # Estos campos son opcionales, pueden ser enviados o no en el Request Body
+    # En el caso de hair_color, estamos utilizando el modelo HairColor, creado anteiormente
     hair_color: Optional[HairColor] = Field(default=None)
     is_married: Optional[bool] = Field(default=None)
+    email: EmailStr
 
 
 @app.get("/")
