@@ -109,10 +109,13 @@ def update_person(
         description="This is the person ID",
         gt=0
     ),
+    # Para modificar dos instancias en la misma petición
     person: Person = Body(...),
     location: Location = Body(...)
 ):
+    # Convertimos el JSON person a dict 
     results = person.dict()
+    # Convertimos el JSON location a dic y combinamos ambos dic actualizando results
     results.update(location.dict())
-
+    # Retornamos el resultado final
     return results
