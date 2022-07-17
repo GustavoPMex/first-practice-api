@@ -22,8 +22,9 @@ class HairColor(Enum):
     blonde = "blonde"
     red = "red"
 
-
+# Creamos un nuevo modelo
 class Location(BaseModel):
+    # Nombre | tipo
     city: str
     state: str
     country: str
